@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Stock.Collection.DataAccess.Repository
 {
@@ -18,37 +19,53 @@ namespace Stock.Collection.DataAccess.Repository
 
         public void DeleteCompany(int CompanyID)
         {
-            throw new NotImplementedException();
+            Company company = context.Companies.Find(CompanyID);
+            context.Companies.Remove(company);
+            context.SaveChanges();
         }
-
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
-
         public IEnumerable<Company> GetCompanies()
         {
-            throw new NotImplementedException();
+            return context.Companies.ToList();
         }
 
         public Company GetCompanyByID(int id)
         {
-            throw new NotImplementedException();
+            return context.Companies.Find(id);
         }
 
         public void InsertCompany(Company company)
         {
-            throw new NotImplementedException();
+            context.Companies.Add(company);
+            context.SaveChanges();
         }
 
         public void Save()
         {
-            throw new NotImplementedException();
+            context.SaveChanges();
         }
 
         public void UpdateCompany(Company company)
         {
-            throw new NotImplementedException();
+            context.Entry(company).State = EntityState.Modified;
+            context.SaveChanges();
         }
+        private bool _disposed = false;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    context.Dispose();
+                }
+            }
+            _disposed = true;
+        }
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
     }
 }
