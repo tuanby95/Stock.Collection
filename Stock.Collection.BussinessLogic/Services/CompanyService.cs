@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Stock.Collection.BussinessLogic.Services
 {
-    public class CompanyService
+    public class CompanyService : ICompanyService
     {
         private readonly ICompanyRepository companyRepository;
 

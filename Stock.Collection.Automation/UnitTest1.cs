@@ -2,6 +2,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
+using Stock.Collection.BussinessLogic.Services;
 
 namespace PlaywrightTests;
 
@@ -9,6 +10,7 @@ namespace PlaywrightTests;
 [TestFixture]
 public class Tests : PageTest
 {
+    private ICompanyService _companyService;
     [Test]
     public async Task OpenPageAndGetList()
     {
