@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 using Stock.Collection.BussinessLogic.Services;
+using Stock.Collection.DataAccess.Entities;
 
 namespace PlaywrightTests;
 
@@ -11,6 +12,7 @@ namespace PlaywrightTests;
 public class Tests : PageTest
 {
     private ICompanyService _companyService;
+    
     [Test]
     public async Task OpenPageAndGetList()
     {
@@ -18,11 +20,18 @@ public class Tests : PageTest
 
         var companiesTableLocator = Page.Locator(selector: (".table-responsive"));
         var rows = companiesTableLocator.Locator("tr");
+        var columns = rows.Locator("td");
         var count = await rows.CountAsync();
+        var countCL = await columns.CountAsync();
         for (int i = 1; i < count; i++)
         {
-            string row = await rows.Nth(i).TextContentAsync();
-            Console.WriteLine(row);
+            var Company = new Company();
+            //var row = await rows.Nth(i).TextContentAsync();
+            for (int j = 0; j < countCL; j++)
+            {
+                var column = await columns.Nth(j).TextContentAsync();
+                //Company.Id = await columns.Nth(j).TextContentAsync();
+            }
         }
     }
 }
