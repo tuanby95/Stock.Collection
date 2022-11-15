@@ -19,9 +19,10 @@ public class Tests : PageTest
         var companiesTableLocator = Page.Locator(selector: (".table-responsive"));
         var rows = companiesTableLocator.Locator("tr");
         var count = await rows.CountAsync();
-        for (int i = 0; i < count; i++)
+        for (int i = 1; i < count; i++)
         {
-            Console.WriteLine(await rows.Nth(i).TextContentAsync());
+            string row = await rows.Nth(i).TextContentAsync();
+            Console.WriteLine(row);
         }
     }
 }
