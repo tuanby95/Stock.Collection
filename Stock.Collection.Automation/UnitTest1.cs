@@ -31,7 +31,38 @@ public class Tests : PageTest
             {
                 var column = await columns.Nth(j).TextContentAsync();
                 //Company.Id = await columns.Nth(j).TextContentAsync();
+                if(j == 0)
+                {
+                    Company.Id = int.Parse(column);
+                    Console.WriteLine(Company.Id);
+                }
+                if(j == 1)
+                {
+                    Company.StockCode = column;
+                    Console.WriteLine(Company.StockCode);
+                }
+                if(j == 2)
+                {
+                    Company.CompanyName = column;
+                    Console.WriteLine(Company.CompanyName);
+                 }
+                if(j == 3)
+                {
+                    Company.Industry = column;
+                    Console.WriteLine(Company.Industry);
+                }
+                if(j == 4) 
+                {
+                    Company.StockExchange = column;
+                    Console.WriteLine(Company.StockExchange);
+                }
+                if(j == 5)
+                {
+                    Company.ListedStock = double.Parse(column);
+                    Console.WriteLine(Company.ListedStock);
+                }
             }
+            Console.WriteLine(Company);
         }
     }
 }
