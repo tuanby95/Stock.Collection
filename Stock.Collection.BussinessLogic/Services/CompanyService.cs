@@ -25,6 +25,7 @@ namespace Stock.Collection.BussinessLogic.Services
             {
                 companyRepository.InsertCompany(company);
             }
+            
         }
         public void DeleteCompanyData(int CompanyID)
         {

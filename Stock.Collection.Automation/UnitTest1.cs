@@ -11,8 +11,8 @@ namespace PlaywrightTests;
 [TestFixture]
 public class Tests : PageTest
 {
-    private ICompanyService _companyService;
-    
+    public readonly ICompanyService _companyService;
+
     [Test]
     public async Task OpenPageAndGetList()
     {
@@ -22,47 +22,46 @@ public class Tests : PageTest
         var rows = companiesTableLocator.Locator("tr");
         var columns = rows.Locator("td");
         var count = await rows.CountAsync();
-        var countCL = await columns.CountAsync();
-        for (int i = 1; i < count; i++)
+        List<Company> companies = new List<Company>();
+
+        for (int i = 0; i < count - 1; i++)
         {
             var Company = new Company();
-            //var row = await rows.Nth(i).TextContentAsync();
-            for (int j = 0; j < countCL; j++)
+            for (var j = 0; j < 6; j++)
             {
-                var column = await columns.Nth(j).TextContentAsync();
-                //Company.Id = await columns.Nth(j).TextContentAsync();
-                if(j == 0)
+                var colIndex = (6 * i) + j;
+                var column = await columns.Nth(colIndex).TextContentAsync();
+                if (j == 0)
                 {
                     Company.Id = int.Parse(column);
-                    Console.WriteLine(Company.Id);
                 }
-                if(j == 1)
+                if (j == 1)
                 {
                     Company.StockCode = column;
-                    Console.WriteLine(Company.StockCode);
                 }
-                if(j == 2)
+                if (j == 2)
                 {
                     Company.CompanyName = column;
-                    Console.WriteLine(Company.CompanyName);
-                 }
-                if(j == 3)
+                }
+                if (j == 3)
                 {
                     Company.Industry = column;
-                    Console.WriteLine(Company.Industry);
                 }
-                if(j == 4) 
+                if (j == 4)
                 {
                     Company.StockExchange = column;
-                    Console.WriteLine(Company.StockExchange);
                 }
-                if(j == 5)
+                if (j == 5)
                 {
                     Company.ListedStock = double.Parse(column);
-                    Console.WriteLine(Company.ListedStock);
                 }
             }
-            Console.WriteLine(Company);
+            companies.Add(Company);
         }
+        foreach (var company in companies)
+        {
+            Console.WriteLine(company.CompanyName);
+        }
+        _companyService.StoreCompanyData(companies);
     }
 }
