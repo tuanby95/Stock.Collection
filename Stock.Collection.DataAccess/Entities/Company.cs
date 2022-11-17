@@ -1,6 +1,9 @@
-﻿namespace Stock.Collection.DataAccess.Entities
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Stock.Collection.DataAccess.Entities
 {
-    public class Company
+    public class Company 
     {
         public int Id { get; set; }
         public string StockCode { get; set; }

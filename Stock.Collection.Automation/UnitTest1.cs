@@ -6,6 +6,7 @@ using Stock.Collection.BussinessLogic.Services;
 using Stock.Collection.DataAccess.Entities;
 using Stock.Collection.DataAccess.Repository;
 using Stock.Collection.DataAccess.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace PlaywrightTests;
 
@@ -13,7 +14,7 @@ namespace PlaywrightTests;
 [TestFixture]
 public class Tests : PageTest
 {
-    
+
     ICompanyService _companyService;
     ICompanyRepository _companyRepository;
     StockDbContext StockDbContext;
@@ -25,11 +26,14 @@ public class Tests : PageTest
         _companyRepository = new CompanyRepository(StockDbContext);
     }
 
-    [Test]
-    public async Task OpenPageAndGetList()
+
+    public async Task OpenPage()
     {
         await Page.GotoAsync("https://finance.vietstock.vn/doanh-nghiep-a-z?page=1");
-
+    }
+    public async Task GetCompanyList()
+    {
+        //using (var dbContext = new StockDbContext());
         var companiesTableLocator = Page.Locator(selector: (".table-responsive"));
         var rows = companiesTableLocator.Locator("tr");
         var columns = rows.Locator("td");
@@ -68,23 +72,50 @@ public class Tests : PageTest
                     Company.ListedStock = double.Parse(column);
                 }
             }
-            companiesList.Add(Company);
+            companiesList.Add(Company);            
         }
-        foreach (var company in companiesList)
+        using (var dbContext = new StockDbContext())
         {
-            Console.WriteLine(company.CompanyName);
-        }
-        _companyService.StoreCompanyData(companiesList);
+            dbContext.Companies.AddRange(companiesList);
+            dbContext.SaveChanges();
+        };
     }
-    public async Task OpenNextPage()
+    public async Task Login()
     {
-        await Page.GotoAsync("https://finance.vietstock.vn/doanh-nghiep-a-z?page=1");
         var loginBtn = Page.Locator("text=Đăng nhập").First;
         await loginBtn.ClickAsync();
-        var emailField = loginBtn.Locator("name=txtEmail").ScreenshotAsync(new() { Path = "hello.png" });
-        var passwordField = Page.Locator("css=[placeholder='Mật khẩu']").ScreenshotAsync(new() { Path = "hehehehe.png" });
-        //var pageArea = Page.Locator(selector: ".form-group");
-        //var nextBtn = pageArea.Locator(selector: ".btn-group").First;
-        //await nextBtn.ClickAsync();
+        var emailField = Page.Locator("css=[id='txtEmailLogin']");
+        await emailField.FillAsync("dmtuan1995@gmail.com");
+        var passwordField = Page.Locator("css=[id='txtPassword']");
+        await passwordField.FillAsync("a5562915");
+        await Page.Keyboard.PressAsync("Enter");
+    }
+    public async Task GoToNextPage()
+    {
+        var i = 165;
+        try
+        {
+            do
+            {
+                var pageArea = Page.Locator(selector: ".form-group").Nth(3);
+                var nextBtn = pageArea.Locator(selector: ".btn-group").First;
+                await nextBtn.ClickAsync();
+                i--;
+            } while (i > 0);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+
+
+    }
+    [Test]
+    public async Task TestFlow()
+    {
+        await OpenPage();
+        await Login();
+        //await GoToNextPage();
+        await GetCompanyList();
     }
 }
