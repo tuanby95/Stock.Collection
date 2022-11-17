@@ -19,6 +19,10 @@ namespace Stock.Collection.BussinessLogic.Services
             this.companyRepository = companyRepository;
         }
 
+        public CompanyService()
+        {
+        }
+
         public void StoreCompanyData(List<Company> companies)
         {
             foreach (Company company in companies)

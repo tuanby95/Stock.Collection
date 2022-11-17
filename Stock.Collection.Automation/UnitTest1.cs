@@ -1,9 +1,11 @@
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 using Stock.Collection.BussinessLogic.Services;
 using Stock.Collection.DataAccess.Entities;
+using Stock.Collection.DataAccess.Repository;
+using Stock.Collection.DataAccess.Data;
 
 namespace PlaywrightTests;
 
@@ -11,7 +13,17 @@ namespace PlaywrightTests;
 [TestFixture]
 public class Tests : PageTest
 {
-    public readonly ICompanyService _companyService;
+    
+    ICompanyService _companyService;
+    ICompanyRepository _companyRepository;
+    StockDbContext StockDbContext;
+
+    [SetUp]
+    public void Initialize()
+    {
+        _companyService = new CompanyService();
+        _companyRepository = new CompanyRepository(StockDbContext);
+    }
 
     [Test]
     public async Task OpenPageAndGetList()
@@ -22,7 +34,7 @@ public class Tests : PageTest
         var rows = companiesTableLocator.Locator("tr");
         var columns = rows.Locator("td");
         var count = await rows.CountAsync();
-        List<Company> companies = new List<Company>();
+        List<Company> companiesList = new List<Company>();
 
         for (int i = 0; i < count - 1; i++)
         {
@@ -56,12 +68,23 @@ public class Tests : PageTest
                     Company.ListedStock = double.Parse(column);
                 }
             }
-            companies.Add(Company);
+            companiesList.Add(Company);
         }
-        foreach (var company in companies)
+        foreach (var company in companiesList)
         {
             Console.WriteLine(company.CompanyName);
         }
-        _companyService.StoreCompanyData(companies);
+        _companyService.StoreCompanyData(companiesList);
+    }
+    public async Task OpenNextPage()
+    {
+        await Page.GotoAsync("https://finance.vietstock.vn/doanh-nghiep-a-z?page=1");
+        var loginBtn = Page.Locator("text=Đăng nhập").First;
+        await loginBtn.ClickAsync();
+        var emailField = loginBtn.Locator("name=txtEmail").ScreenshotAsync(new() { Path = "hello.png" });
+        var passwordField = Page.Locator("css=[placeholder='Mật khẩu']").ScreenshotAsync(new() { Path = "hehehehe.png" });
+        //var pageArea = Page.Locator(selector: ".form-group");
+        //var nextBtn = pageArea.Locator(selector: ".btn-group").First;
+        //await nextBtn.ClickAsync();
     }
 }
