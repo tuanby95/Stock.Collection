@@ -23,7 +23,8 @@ public class Tests : PageTest
     public void Initialize()
     {
         _companyService = new CompanyService();
-        _companyRepository = new CompanyRepository(StockDbContext);
+        //this.StockDbContext= new StockDbContext();
+        //this._companyRepository = new CompanyRepository(StockDbContext);
     }
 
 
@@ -33,7 +34,6 @@ public class Tests : PageTest
     }
     public async Task GetCompanyList()
     {
-        //using (var dbContext = new StockDbContext());
         var companiesTableLocator = Page.Locator(selector: (".table-responsive"));
         var rows = companiesTableLocator.Locator("tr");
         var columns = rows.Locator("td");
@@ -79,6 +79,8 @@ public class Tests : PageTest
             dbContext.Companies.AddRange(companiesList);
             dbContext.SaveChanges();
         };
+        //_companyService.StoreCompanyData(companiesList);
+
     }
     public async Task Login()
     {
