@@ -39,7 +39,11 @@ public class Tests : PageTest
         var columns = rows.Locator("td");
         var count = await rows.CountAsync();
         List<Company> companiesList = new List<Company>();
-        try
+        var pageArea = Page.Locator(selector: ".form-group").Nth(3);
+        var nextBtn = pageArea.Locator(selector: ".btn-group").First;
+
+        var k = 161; //tổng số page
+        do
         {
             for (int i = 0; i < count - 1; i++)
             {
@@ -51,6 +55,7 @@ public class Tests : PageTest
                     if (j == 0)
                     {
                         Company.Id = int.Parse(column);
+                        //if column có rồi -> column + 20
                     }
                     if (j == 1)
                     {
@@ -75,17 +80,15 @@ public class Tests : PageTest
                 }
                 companiesList.Add(Company);
             }
-            using (var dbContext = new StockDbContext())
-            {
-                dbContext.Companies.AddRange(companiesList);
-                dbContext.SaveChanges();
-            };
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex);
-        }
-        
+            await nextBtn.ClickAsync();
+            k--;
+        } while (k > 0);
+        //using (var dbContext = new StockDbContext())
+        //{
+        //    dbContext.Companies.AddRange(companiesList);
+        //    dbContext.SaveChanges();
+        //};
+
         //_companyService.StoreCompanyData(companiesList);
 
     }
