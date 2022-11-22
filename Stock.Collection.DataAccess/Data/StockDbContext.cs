@@ -19,6 +19,7 @@ namespace Stock.Collection.DataAccess.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Company>().ToTable("Company");
+            modelBuilder.Entity<Company>().HasKey("Id");
         }
     }
 }

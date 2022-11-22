@@ -39,46 +39,53 @@ public class Tests : PageTest
         var columns = rows.Locator("td");
         var count = await rows.CountAsync();
         List<Company> companiesList = new List<Company>();
-
-        for (int i = 0; i < count - 1; i++)
+        try
         {
-            var Company = new Company();
-            for (var j = 0; j < 6; j++)
+            for (int i = 0; i < count - 1; i++)
             {
-                var colIndex = (6 * i) + j;
-                var column = await columns.Nth(colIndex).TextContentAsync();
-                if (j == 0)
+                var Company = new Company();
+                for (var j = 0; j < 6; j++)
                 {
-                    Company.Id = int.Parse(column);
+                    var colIndex = (6 * i) + j;
+                    var column = await columns.Nth(colIndex).TextContentAsync();
+                    if (j == 0)
+                    {
+                        Company.Id = int.Parse(column);
+                    }
+                    if (j == 1)
+                    {
+                        Company.StockCode = column;
+                    }
+                    if (j == 2)
+                    {
+                        Company.CompanyName = column;
+                    }
+                    if (j == 3)
+                    {
+                        Company.Industry = column;
+                    }
+                    if (j == 4)
+                    {
+                        Company.StockExchange = column;
+                    }
+                    if (j == 5)
+                    {
+                        Company.ListedStock = double.Parse(column);
+                    }
                 }
-                if (j == 1)
-                {
-                    Company.StockCode = column;
-                }
-                if (j == 2)
-                {
-                    Company.CompanyName = column;
-                }
-                if (j == 3)
-                {
-                    Company.Industry = column;
-                }
-                if (j == 4)
-                {
-                    Company.StockExchange = column;
-                }
-                if (j == 5)
-                {
-                    Company.ListedStock = double.Parse(column);
-                }
+                companiesList.Add(Company);
             }
-            companiesList.Add(Company);            
+            using (var dbContext = new StockDbContext())
+            {
+                dbContext.Companies.AddRange(companiesList);
+                dbContext.SaveChanges();
+            };
         }
-        using (var dbContext = new StockDbContext())
+        catch (Exception ex)
         {
-            dbContext.Companies.AddRange(companiesList);
-            dbContext.SaveChanges();
-        };
+            Console.WriteLine(ex);
+        }
+        
         //_companyService.StoreCompanyData(companiesList);
 
     }

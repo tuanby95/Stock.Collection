@@ -11,8 +11,8 @@ using Stock.Collection.DataAccess.Data;
 namespace Stock.Collection.DataAccess.Migrations
 {
     [DbContext(typeof(StockDbContext))]
-    [Migration("20221115045032_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20221122064905_InitilizeDb")]
+    partial class InitilizeDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,10 +27,7 @@ namespace Stock.Collection.DataAccess.Migrations
             modelBuilder.Entity("Stock.Collection.DataAccess.Entities.Company", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CompanyName")
                         .IsRequired()

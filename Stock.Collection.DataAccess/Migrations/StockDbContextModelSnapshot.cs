@@ -24,10 +24,7 @@ namespace Stock.Collection.DataAccess.Migrations
             modelBuilder.Entity("Stock.Collection.DataAccess.Entities.Company", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CompanyName")
                         .IsRequired()
