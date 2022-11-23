@@ -5,7 +5,6 @@ namespace Stock.Collection.DataAccess.Entities
 {
     public class Company 
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
         public string StockCode { get; set; }
         public string CompanyName { get; set; }

@@ -45,43 +45,69 @@ public class Tests : PageTest
         var k = 161; //tổng số page
         do
         {
+            await Page.WaitForSelectorAsync(selector: (".table-responsive"));
             for (int i = 0; i < count - 1; i++)
             {
                 var Company = new Company();
                 for (var j = 0; j < 6; j++)
                 {
                     var colIndex = (6 * i) + j;
-                    var column = await columns.Nth(colIndex).TextContentAsync();
-                    if (j == 0)
-                    {
-                        Company.Id = int.Parse(column);
-                        //if column có rồi -> column + 20
-                    }
+                    var columnValue = await columns.Nth(colIndex).TextContentAsync();
+                    //if (j == 0)
+                    //{
+                    //    Company.Id = int.Parse(columnValue);
+
+                    //    //if column có rồi -> column + 20
+                    //}
                     if (j == 1)
                     {
-                        Company.StockCode = column;
+                        Company.StockCode = columnValue;
                     }
                     if (j == 2)
                     {
-                        Company.CompanyName = column;
+                        Company.CompanyName = columnValue;
                     }
                     if (j == 3)
                     {
-                        Company.Industry = column;
+                        Company.Industry = columnValue;
                     }
                     if (j == 4)
                     {
-                        Company.StockExchange = column;
+                        Company.StockExchange = columnValue;
                     }
                     if (j == 5)
                     {
-                        Company.ListedStock = double.Parse(column);
+                        Company.ListedStock = double.Parse(columnValue);
+                        if (colIndex == 119)
+                        {
+                            colIndex = 0;
+                        }
                     }
                 }
+                //foreach (var comp in companiesList)
+                //{
+                //    if (comp.StockCode != Company.StockCode)
+                //    {
+                //        companiesList.Add(Company);
+                //        await nextBtn.ClickAsync();
+                //        k--;
+                //    } else
+                //    {
+                //        await nextBtn.ClickAsync();
+                //        k--;
+                //    }
+                //}
+                //var companyExisted = companiesList.Any(c => c.Id == Company.Id);
+
+                //if (!companyExisted)
+                //{
+                //    companiesList.Add(Company);
+                //}
                 companiesList.Add(Company);
             }
             await nextBtn.ClickAsync();
             k--;
+            Thread.Sleep(1000);
         } while (k > 0);
         //using (var dbContext = new StockDbContext())
         //{
