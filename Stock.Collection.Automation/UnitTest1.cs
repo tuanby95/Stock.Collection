@@ -7,6 +7,8 @@ using Stock.Collection.DataAccess.Entities;
 using Stock.Collection.DataAccess.Repository;
 using Stock.Collection.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
+using Polly;
+using Microsoft.Playwright;
 
 namespace PlaywrightTests;
 
@@ -19,12 +21,13 @@ public class Tests : PageTest
     ICompanyRepository _companyRepository;
     StockDbContext StockDbContext;
 
+
     [SetUp]
     public void Initialize()
     {
         _companyService = new CompanyService();
-        //this.StockDbContext= new StockDbContext();
-        //this._companyRepository = new CompanyRepository(StockDbContext);
+        StockDbContext= new StockDbContext();
+        _companyRepository = new CompanyRepository(StockDbContext);
     }
 
 
@@ -53,12 +56,6 @@ public class Tests : PageTest
                 {
                     var colIndex = (6 * i) + j;
                     var columnValue = await columns.Nth(colIndex).TextContentAsync();
-                    //if (j == 0)
-                    //{
-                    //    Company.Id = int.Parse(columnValue);
-
-                    //    //if column có rồi -> column + 20
-                    //}
                     if (j == 1)
                     {
                         Company.StockCode = columnValue;
@@ -84,37 +81,24 @@ public class Tests : PageTest
                         }
                     }
                 }
-                //foreach (var comp in companiesList)
-                //{
-                //    if (comp.StockCode != Company.StockCode)
-                //    {
-                //        companiesList.Add(Company);
-                //        await nextBtn.ClickAsync();
-                //        k--;
-                //    } else
-                //    {
-                //        await nextBtn.ClickAsync();
-                //        k--;
-                //    }
-                //}
-                //var companyExisted = companiesList.Any(c => c.Id == Company.Id);
-
-                //if (!companyExisted)
-                //{
-                //    companiesList.Add(Company);
-                //}
                 companiesList.Add(Company);
             }
             await nextBtn.ClickAsync();
             k--;
-            Thread.Sleep(1000);
+            Thread.Sleep(2000);
         } while (k > 0);
-        //using (var dbContext = new StockDbContext())
-        //{
-        //    dbContext.Companies.AddRange(companiesList);
-        //    dbContext.SaveChanges();
-        //};
-
+        try
+        {
+            using (var dbContext = new StockDbContext())
+            {
+                dbContext.Companies.AddRange(companiesList);
+                dbContext.SaveChanges();
+            };
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
         //_companyService.StoreCompanyData(companiesList);
 
     }

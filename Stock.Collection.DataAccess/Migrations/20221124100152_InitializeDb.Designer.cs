@@ -11,7 +11,7 @@ using Stock.Collection.DataAccess.Data;
 namespace Stock.Collection.DataAccess.Migrations
 {
     [DbContext(typeof(StockDbContext))]
-    [Migration("20221123070837_InitializeDb")]
+    [Migration("20221124100152_InitializeDb")]
     partial class InitializeDb
     {
         /// <inheritdoc />
